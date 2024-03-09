@@ -1,2 +1,2 @@
 #add other tickers here
-myportfolio = ["GOOG", "MNMD"]
+myportfolio = ["GOOG", "MNMD", "NVDA"]

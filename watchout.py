@@ -65,6 +65,16 @@ def calculate_price_difference(stock_data):
     percentage_difference = (price_difference / previous_year_price) * 100
     return price_difference, percentage_difference
 
+def moving_average(stock_data):
+   # Download data for the last year
+  data = yf.download("GOOG", period="1y")
+
+  # Get closing prices
+  moving_average = data["Close"][0]
+
+  return moving_average
+
+
 def visualize_portfolio(tickers=myportfolio):
   #-- BOLIERPLATE --#
     st.set_page_config(page_title="Stock Dashboard", layout="wide", page_icon="📈")
@@ -88,8 +98,9 @@ def visualize_portfolio(tickers=myportfolio):
             max_52_week_high = stock_data["High"].tail(252).max()
             min_52_week_low = stock_data["Low"].tail(252).min()
             stddev = stock_data["Close"].std()
+            moving_average = moving_average(stock_data)
 
-            col1, col2, col3, col4, col5 = st.columns(5)
+            col1, col2, col3, col4, col5, col6 = st.columns(6)
             with col1:
                 st.metric("Close Price", f"${latest_close_price:.2f}")
             with col2:
@@ -100,6 +111,8 @@ def visualize_portfolio(tickers=myportfolio):
                 st.metric("52-Week Low", f"${min_52_week_low:.2f}")
             with col5:
                 st.metric("StdDev on close", f"{stddev:.5f}")
+            with col6:
+                st.metric("Moving average", f"{moving_average:.5f}")
 
             st.subheader("Candlestick Chart")
             candlestick_chart = go.Figure(data=[go.Candlestick(x=stock_data.index, open=stock_data['Open'], high=stock_data['High'], low=stock_data['Low'], close=stock_data['Close'])])
